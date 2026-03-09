@@ -1,0 +1,20 @@
+services:
+    demo-web-client:
+        build:
+            context: .
+            target: development
+        container_name: paymock_web_client
+        ports:
+            - '3000:5173'
+        volumes:
+            - .:/app
+            - /app/node_modules
+        environment:
+            - VITE_API_URL=http://localhost:8080/api/v1
+        networks:
+            - paymock
+
+networks:
+    paymock:
+        external: true
+        name: paymock-gateway_paymock
