@@ -98,6 +98,7 @@ function handleLogout() {
                 <div class="flex items-center space-x-4">
                     <router-link
                         :to="{ name: 'demo-checkout' }"
+                        target="_blank"
                         class="hidden sm:flex items-center space-x-2 bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-full text-sm font-medium hover:bg-indigo-100 transition-colors"
                     >
                         <Icon icon="lucide:shopping-cart" class="h-4 w-4" />
