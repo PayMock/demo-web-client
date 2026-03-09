@@ -2,6 +2,8 @@
 import { ref, onMounted } from 'vue';
 import { api } from '@/api/client';
 import { Icon } from '@iconify/vue';
+import { cn } from '@/utils/cn';
+import { formatCurrency } from '@/utils/currency';
 import Card from '@/components/ui/Card.vue';
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
@@ -22,7 +24,7 @@ const error = ref('');
 async function fetchData() {
     try {
         isLoading.value = true;
-        const [payoutsData, balanceData] = await Promise.all([api.get<any>('/payouts'), api.get<any>('/balances')]);
+        const [payoutsData, balanceData] = await Promise.all([api.get<any>('/payouts'), api.get<any>('/balance')]);
         payouts.value = payoutsData.data || [];
         balance.value = balanceData;
     } catch (e) {
@@ -62,13 +64,6 @@ async function handleRequestPayout() {
     } finally {
         isSubmitting.value = false;
     }
-}
-
-function formatCurrency(value: string | number) {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-    }).format(Number(value || 0));
 }
 
 function formatDate(dateStr: string) {
@@ -120,13 +115,15 @@ onMounted(fetchData);
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
-                        <tr v-if="isLoading" v-for="i in 5" :key="i" class="animate-pulse">
-                            <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-24"></div></td>
-                            <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-16"></div></td>
-                            <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-20"></div></td>
-                            <td class="px-6 py-4"><div class="h-6 bg-slate-200 rounded-full w-20"></div></td>
-                            <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-28"></div></td>
-                        </tr>
+                        <template v-if="isLoading">
+                            <tr v-for="i in 5" :key="i" class="animate-pulse">
+                                <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-24"></div></td>
+                                <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-16"></div></td>
+                                <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-20"></div></td>
+                                <td class="px-6 py-4"><div class="h-6 bg-slate-200 rounded-full w-20"></div></td>
+                                <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-28"></div></td>
+                            </tr>
+                        </template>
                         <tr v-else-if="payouts.length === 0">
                             <td colspan="5" class="px-6 py-12 text-center text-slate-500 italic">
                                 No withdrawal requests found.
@@ -227,15 +224,14 @@ onMounted(fetchData);
                         <Input id="pixKey" label="PIX Key" placeholder="your@email.com" v-model="pixKey" required />
                     </div>
                 </div>
-
-                <template #footer>
-                    <Button variant="outline" @click="showRequestModal = false" :disabled="isSubmitting">Cancel</Button>
-                    <Button type="submit" :disabled="isSubmitting">
-                        <Icon v-if="isSubmitting" icon="lucide:loader-2" class="mr-2 h-4 w-4 animate-spin" />
-                        Confirm Withdrawal
-                    </Button>
-                </template>
             </form>
+            <template #footer>
+                <Button variant="outline" @click="showRequestModal = false" :disabled="isSubmitting">Cancel</Button>
+                <Button type="submit" :disabled="isSubmitting">
+                    <Icon v-if="isSubmitting" icon="lucide:loader-2" class="mr-2 h-4 w-4 animate-spin" />
+                    Confirm Withdrawal
+                </Button>
+            </template>
         </Modal>
     </div>
 </template>

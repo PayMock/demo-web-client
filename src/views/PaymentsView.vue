@@ -2,6 +2,8 @@
 import { ref, onMounted, computed } from 'vue';
 import { api } from '@/api/client';
 import { Icon } from '@iconify/vue';
+import { cn } from '@/utils/cn';
+import { formatCurrency } from '@/utils/currency';
 import Card from '@/components/ui/Card.vue';
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
@@ -31,16 +33,8 @@ async function fetchPayments() {
 }
 
 function handleViewDetails(payment: any) {
-    selectedPayment.ref = payment; // selectedPayment is ref, wait
     selectedPayment.value = payment;
     showDetailsModal.value = true;
-}
-
-function formatCurrency(value: string | number) {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-    }).format(Number(value || 0));
 }
 
 function formatDate(dateStr: string) {
@@ -108,14 +102,16 @@ function setPage(p: number) {
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
-                        <tr v-if="isLoading" v-for="i in 8" :key="i" class="animate-pulse">
-                            <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-24"></div></td>
-                            <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-32"></div></td>
-                            <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-16"></div></td>
-                            <td class="px-6 py-4"><div class="h-6 bg-slate-200 rounded-full w-20"></div></td>
-                            <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-28"></div></td>
-                            <td class="px-6 py-4"><div class="h-8 bg-slate-200 rounded w-12"></div></td>
-                        </tr>
+                        <template v-if="isLoading">
+                            <tr v-for="i in 8" :key="i" class="animate-pulse">
+                                <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-24"></div></td>
+                                <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-32"></div></td>
+                                <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-16"></div></td>
+                                <td class="px-6 py-4"><div class="h-6 bg-slate-200 rounded-full w-20"></div></td>
+                                <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-28"></div></td>
+                                <td class="px-6 py-4"><div class="h-8 bg-slate-200 rounded w-12"></div></td>
+                            </tr>
+                        </template>
                         <tr v-else-if="paymentsData?.data?.length === 0">
                             <td colspan="6" class="px-6 py-12 text-center text-slate-500 italic">
                                 No payments found matching your criteria.

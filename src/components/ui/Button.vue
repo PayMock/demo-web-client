@@ -1,6 +1,6 @@
 <template>
     <button
-        :class="
+        :class="[
             cn(
                 'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2',
                 variant === 'primary' && 'bg-indigo-600 text-white hover:bg-indigo-700',
@@ -9,8 +9,10 @@
                 variant === 'ghost' && 'hover:bg-slate-100 text-slate-700',
                 variant === 'danger' && 'bg-rose-600 text-white hover:bg-rose-700',
                 className
-            )
-        "
+            ),
+
+            !($attrs?.disabled || $attrs?.readonly) ? 'cursor-pointer' : '',
+        ]"
         v-bind="$attrs"
     >
         <slot />

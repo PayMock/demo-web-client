@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { api } from '@/api/client';
 import { Icon } from '@iconify/vue';
+import { cn } from '@/utils/cn';
 import Card from '@/components/ui/Card.vue';
 import Button from '@/components/ui/Button.vue';
 

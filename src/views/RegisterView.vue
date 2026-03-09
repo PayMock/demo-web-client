@@ -108,15 +108,14 @@ function handleLoginWithProject() {
                         </div>
                     </div>
                 </div>
-
-                <template #footer>
-                    <Button variant="outline" @click="showSuccessModal = false">Close</Button>
-                    <Button @click="handleLoginWithProject">
-                        <Icon icon="lucide:log-in" class="mr-2 h-4 w-4" />
-                        Login with Project
-                    </Button>
-                </template>
             </div>
+            <template #footer>
+                <Button variant="outline" @click="showSuccessModal = false">Close</Button>
+                <Button @click="handleLoginWithProject">
+                    <Icon icon="lucide:log-in" class="mr-2 h-4 w-4" />
+                    Login with Project
+                </Button>
+            </template>
         </Modal>
     </div>
 </template>

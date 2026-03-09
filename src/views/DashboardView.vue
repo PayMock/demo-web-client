@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { api } from '@/api/client';
 import { Icon } from '@iconify/vue';
+import { cn } from '@/utils/cn';
+import { formatCurrency } from '@/utils/currency';
 import Card from '@/components/ui/Card.vue';
 import Button from '@/components/ui/Button.vue';
 
+const router = useRouter();
 const stats = ref<any>(null);
 const recentPayments = ref<any[]>([]);
 const isLoading = ref(true);
@@ -13,7 +17,7 @@ async function fetchData() {
     try {
         isLoading.value = true;
         const [balanceData, paymentsData] = await Promise.all([
-            api.get<any>('/balances'),
+            api.get<any>('/balance'),
             api.get<any>('/payments?limit=5'),
         ]);
         stats.value = balanceData;
@@ -23,13 +27,6 @@ async function fetchData() {
     } finally {
         isLoading.value = false;
     }
-}
-
-function formatCurrency(value: string | number) {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-    }).format(Number(value || 0));
 }
 
 function formatDate(dateStr: string) {
@@ -131,12 +128,14 @@ onMounted(fetchData);
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
-                            <tr v-if="isLoading" v-for="i in 5" :key="i" class="animate-pulse">
-                                <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-32"></div></td>
-                                <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-16"></div></td>
-                                <td class="px-6 py-4"><div class="h-6 bg-slate-200 rounded-full w-20"></div></td>
-                                <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-24"></div></td>
-                            </tr>
+                            <template v-if="isLoading">
+                                <tr v-for="i in 5" :key="i" class="animate-pulse">
+                                    <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-32"></div></td>
+                                    <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-16"></div></td>
+                                    <td class="px-6 py-4"><div class="h-6 bg-slate-200 rounded-full w-20"></div></td>
+                                    <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-24"></div></td>
+                                </tr>
+                            </template>
                             <tr v-else-if="recentPayments.length === 0">
                                 <td colspan="4" class="px-6 py-12 text-center text-slate-500">No records found</td>
                             </tr>

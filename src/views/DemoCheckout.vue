@@ -2,6 +2,8 @@
 import { ref } from 'vue';
 import { api } from '@/api/client';
 import { Icon } from '@iconify/vue';
+import { formatCurrency } from '@/utils/currency';
+import { cn } from '@/utils/cn';
 import Card from '@/components/ui/Card.vue';
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
@@ -55,6 +57,13 @@ function reset() {
             <!-- Order Summary -->
             <div class="md:col-span-2 order-2 md:order-1">
                 <Card class="p-6 sticky top-24">
+                    <router-link
+                        :to="{ name: 'dashboard' }"
+                        class="hidden sm:flex items-center space-x-2 bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-full text-sm font-medium hover:bg-indigo-100 transition-colors"
+                    >
+                        <Icon icon="lucide:arrow-left" class="h-4 w-4" />
+                        <span>Back to dashboard</span>
+                    </router-link>
                     <h2 class="text-lg font-bold text-slate-900 mb-6">Order Summary</h2>
                     <div class="flex items-center space-x-4 mb-6">
                         <div class="h-16 w-16 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400">
@@ -222,14 +231,3 @@ function reset() {
         </div>
     </div>
 </template>
-
-<script lang="ts">
-function formatCurrency(v: number) {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
-}
-
-import { cn } from '@/utils/cn';
-export default {
-    // helpers
-};
-</script>

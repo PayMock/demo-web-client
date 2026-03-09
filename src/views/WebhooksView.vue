@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { api } from '@/api/client';
 import { Icon } from '@iconify/vue';
+import { cn } from '@/utils/cn';
 import Card from '@/components/ui/Card.vue';
 import Button from '@/components/ui/Button.vue';
 
@@ -48,12 +49,14 @@ onMounted(fetchWebhooks);
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
-                        <tr v-if="isLoading" v-for="i in 5" :key="i" class="animate-pulse">
-                            <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-48"></div></td>
-                            <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-24"></div></td>
-                            <td class="px-6 py-4"><div class="h-6 bg-slate-200 rounded-full w-16"></div></td>
-                            <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-28"></div></td>
-                        </tr>
+                        <template v-if="isLoading">
+                            <tr v-for="i in 5" :key="i" class="animate-pulse">
+                                <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-48"></div></td>
+                                <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-24"></div></td>
+                                <td class="px-6 py-4"><div class="h-6 bg-slate-200 rounded-full w-16"></div></td>
+                                <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-28"></div></td>
+                            </tr>
+                        </template>
                         <tr v-else-if="webhooks.length === 0">
                             <td colspan="4" class="px-6 py-12 text-center text-slate-500 italic">
                                 No webhook events found.
